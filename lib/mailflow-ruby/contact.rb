@@ -11,7 +11,7 @@ module Mailflow
     class << self
       def list
         response = get_request('contacts')
-        response.parsed_response.flatten.map do |attributes|
+        response.parsed_response.map do |attributes|
           Contact.new(attributes)
         end
       end
@@ -55,6 +55,18 @@ module Mailflow
 
     def untag(tags)
       Mailflow::Tag.untag(tags, {contact_id: id})
+    end
+
+    def attributes
+      Mailflow::Attribute.list(contact_id: id)
+    end
+
+    def set_attributes(attributes)
+      attributes = attributes.map do |key, value|
+        {key: key.to_s, value: value}
+      end
+
+      Mailflow::Attribute.update(attributes, {contact_id: id})
     end
 
   end

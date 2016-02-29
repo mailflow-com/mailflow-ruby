@@ -11,7 +11,7 @@ module Mailflow
     class << self
       def list(options = {})
         response = get_request('tags', options)
-        response.parsed_response.flatten.map do |attributes|
+        response.parsed_response.map do |attributes|
           Tag.new(attributes)
         end
       end
@@ -24,7 +24,7 @@ module Mailflow
         
         response = post_request('tags', body)
         raise UnprocessableError if (response.code == 422 || response.code == 404)
-        response.parsed_response.flatten.map do |attributes|
+        response.parsed_response.map do |attributes|
           Tag.new(attributes)
         end
       end
@@ -45,7 +45,8 @@ module Mailflow
     end
 
     def delete
-      Mailflow::Tag.delete_request('tags', {tags: [{name: name}]}).parsed_response
+      Mailflow::Tag.delete_request('tags', {tags: [{name: name}]})
+      return true
     end
 
   end

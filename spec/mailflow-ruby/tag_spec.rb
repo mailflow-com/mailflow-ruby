@@ -125,11 +125,9 @@ describe Mailflow::Tag do
   context '#delete' do
     it 'deletes a tag from all contacts' do
       body = {tags: tags_response}
-      stub_request(:delete, "https://mailflow.com/api/tags").
-        with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
-        to_return(:status => 204)
+      tagger = class_double('HTTParty').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[{\"name\":\"Foo Bar\"}]}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
       response = tag.delete
-      expect(response).to eq(nil)
     end
   end
 

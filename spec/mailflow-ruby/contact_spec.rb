@@ -87,7 +87,7 @@ describe Mailflow::Contact do
   end
 
   context '#tags' do
-    it 'calls tags.list with an email address' do
+    it 'calls tags.list for an instance' do
       tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
       expect(tagger).to receive(:list).with(contact_id: contact.id)
       contact.tags
@@ -110,5 +110,22 @@ describe Mailflow::Contact do
     end
   end
 
+  context '#attributes' do
+    it 'calls attributes.list for an instance' do
+      tagger = class_double('Mailflow::Attribute').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:list).with(contact_id: contact.id)
+      contact.attributes
+    end
+  end
+
+  context '#set_attributes' do
+    it 'calls attributes.update for the instance' do
+      attributes = [{key: 'first', value: 'chris'}, {key: 'second', value: 'foo'}]
+      attributer = class_double('Mailflow::Attribute').as_stubbed_const(:transfer_nested_constants => true)
+      expect(attributer).to receive(:update).with(attributes, {contact_id: contact.id})
+      contact.set_attributes({first: 'chris', second: 'foo'}) 
+    end
+  end
+ 
 
 end

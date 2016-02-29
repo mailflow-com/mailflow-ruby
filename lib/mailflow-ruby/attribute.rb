@@ -11,10 +11,27 @@ module Mailflow
     class << self
       def list(options = {})
         response = get_request('attributes', options)
-        response.parsed_response.flatten.map do |params|
+        response.parsed_response.map do |params|
           Attribute.new(params)
         end
       end
+
+      def update(attributes, params)
+        body = {attributes: attributes}.merge(params)
+        response = post_request('attributes', body)
+        raise UnprocessableError if (response.code == 422 || response.code == 404)
+        response.parsed_response.map do |attributes|
+          Attribute.new(attributes)
+        end
+      end
+
+      def delete(attributes, params = {})
+        body = {attributes: attributes}.merge(params)
+        response = delete_request('attributes', body)
+        raise UnprocessableError if (response.code == 422 || response.code == 404)
+        return true
+      end
+
     end
 
     def initialize(attributes)
