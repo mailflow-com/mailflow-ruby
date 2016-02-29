@@ -30,6 +30,7 @@ module Mailflow
       end
 
       def untag(tags, params = {})
+        tags = tags.map { |tag| {name: tag}}
         delete_request('tags', {tags: tags}.merge(params))
       end
 
