@@ -12,38 +12,69 @@ describe Mailflow::Contact do
   let(:contact) { Mailflow::Contact.new(contact_response) }
   let(:contacts) { [ contact ] }
 
-  it 'returns a list of contacts' do
-    stub_request(:get, "https://mailflow.com/api/contacts").to_return(:body => contacts_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
-    response = Mailflow::Contact.list
-    expected = contacts
-    expect(response).to eq(expected)
+  context '.list' do
+
+    it 'returns a list of contacts if contacts found' do
+      stub_request(:get, "https://mailflow.com/api/contacts").to_return(:body => contacts_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.list
+      expected = contacts
+      expect(response).to eq(expected)
+    end
+
+    it 'returns an empty array if no contacts found' do
+      stub_request(:get, "https://mailflow.com/api/contacts").to_return(:body => [].to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.list
+      expected = []
+      expect(response).to eq(expected)
+    end
+
   end
 
-  it 'returns a contact matching email' do
-    stub_request(:get, "https://mailflow.com/api/contacts?email=chris@mailflow.com").to_return(:body => contact_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
-    email = 'chris@mailflow.com'
-    response = Mailflow::Contact.get({email: email})
-    expected = contact
-    expect(response).to eq(expected)
+  context '.get' do
+    it 'returns a contact matching email' do
+      email = 'chris@mailflow.com'
+      stub_request(:get, "https://mailflow.com/api/contacts?email=#{email}").to_return(:body => contact_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.get({email: email})
+      expected = contact
+      expect(response).to eq(expected)
+    end
+
+    it 'returns a contact matching contact_id' do
+      id = "1ef1280b-d814-4e33-9f30-739c5b20188c"
+      stub_request(:get, "https://mailflow.com/api/contacts?contact_id=#{id}").to_return(:body => contact_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.get({contact_id: id})
+      expected = contact
+      expect(response).to eq(expected)
+    end
+
+    it 'returns nil if no contact found' do
+      email = 'chris@mailflow.com'
+      stub_request(:get, "https://mailflow.com/api/contacts?email=#{email}").to_return(:status => 404, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.get({email: email})
+      expected = nil
+      expect(response).to eq(expected)
+    end
   end
 
-  it 'returns a contact matching contact_id' do
-    stub_request(:get, "https://mailflow.com/api/contacts?contact_id=1ef1280b-d814-4e33-9f30-739c5b20188c").to_return(:body => contact_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
-    id = "1ef1280b-d814-4e33-9f30-739c5b20188c"
-    response = Mailflow::Contact.get({contact_id: id})
-    expected = contact
-    expect(response).to eq(expected)
-  end
+  context '.create' do
 
-  it 'creates a contact' do
+    it 'creates a contact by email address' do
+      body = { "email" => "chris@mailflow.com" }
+      stub_request(:post, "https://mailflow.com/api/contacts").
+        with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
+        to_return(:status => 200, :body => contact_response.to_json, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.create(body)
+      expect(response).to eq(contacts.first)
+    end
 
-    body = { "email" => "chris@mailflow.com" }
-    stub_request(:post, "https://mailflow.com/api/contacts").
-      with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
-      to_return(:status => 200, :body => contact_response.to_json, :headers => { "Content-Type" => "application/json" })
-    response = Mailflow::Contact.create({ "email" => "chris@mailflow.com" })
+    it 'returns 422 if email is invalid' do
+      body = { "email" => "" }
+      stub_request(:post, "https://mailflow.com/api/contacts").
+        with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
+        to_return(:status => 422, :headers => { "Content-Type" => "application/json" })
+      expect{Mailflow::Contact.create(body)}.to raise_error(Mailflow::UnprocessableError)
+    end
 
-    expect(response).to eq(contacts.first)
   end
 
   it 'deletes a contact' do
@@ -51,8 +82,33 @@ describe Mailflow::Contact do
     stub_request(:delete, "https://mailflow.com/api/contacts").
       with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
       to_return(:status => 204)
-
-    contact.delete
+    response = contact.delete
+    expect(response).to eq(nil)
   end
+
+  context '#tags' do
+    it 'calls tags.list with an email address' do
+      tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:list).with(contact_id: contact.id)
+      contact.tags
+    end
+  end
+
+  context '#tag' do
+    it 'tags with an array of strings' do
+      tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:create).with(["Foo Bar"], {contact_id: contact.id})
+      contact.tag(["Foo Bar"])
+    end
+  end
+
+  context '#untag' do
+    it 'removes all tags in array' do
+      tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:untag).with(["Foo Bar"], {contact_id: contact.id})
+      contact.untag(["Foo Bar"])
+    end
+  end
+
 
 end

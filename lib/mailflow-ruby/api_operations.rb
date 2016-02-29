@@ -25,7 +25,7 @@ module Mailflow
       end
 
       def base_params
-        (Mailflow.test_mode) ? {} : {digest_auth: {username: Mailflow.config.username, password: Mailflow.config.password}}
+        (Mailflow.test_mode) ? {} : {digest_auth: {username: Mailflow.config.api_key, password: Mailflow.config.api_secret}}
       end
 
     end
