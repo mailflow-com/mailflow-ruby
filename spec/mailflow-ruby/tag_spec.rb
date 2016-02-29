@@ -104,7 +104,7 @@ describe Mailflow::Tag do
       arguments = {tags: tags_array, email: email_address}
 
       tagger = class_double('HTTParty').as_stubbed_const(:transfer_nested_constants => true)
-      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[\"Foo Bar\"],\"email\":\"chris@mailflow.com\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
+      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[{\"name\":\"Foo Bar\"}],\"email\":\"chris@mailflow.com\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
 
       Mailflow::Tag.untag(tags_array, {email: email_address})
     end
@@ -116,7 +116,7 @@ describe Mailflow::Tag do
       arguments = {tags: tags_array, contact_id: contact_id}
 
       tagger = class_double('HTTParty').as_stubbed_const(:transfer_nested_constants => true)
-      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[\"Foo Bar\"],\"contact_id\":\"12345\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
+      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[{\"name\":\"Foo Bar\"}],\"contact_id\":\"12345\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
 
       Mailflow::Tag.untag(tags_array, {contact_id: contact_id})
     end

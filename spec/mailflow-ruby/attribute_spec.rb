@@ -7,19 +7,19 @@ describe Mailflow::Attribute do
     Mailflow.setup('api_key', 'secret_key')
   end
 
-  # let(:tag_response) { {"name" => "Foo Bar" } }
-  # let(:tags_response) { [tag_response] }
-  # let(:tag) { Mailflow::Tag.new(tag_response) }
-  # let(:tags) { [tag] }
+  let(:empty_attribute_response) { {"key" => "first_name", "label" => "First name" } }
+  let(:empty_attributes_response) { [empty_attribute_response] }
+  let(:empty_attribute) { Mailflow::Attribute.new(empty_attribute_response) }
+  let(:empty_attributes) { [empty_attribute] }
 
   context '.list' do
 
-    # it 'returns a list of attributes if tags found' do
-    #   stub_request(:get, "https://mailflow.com/api/tags").to_return(:body => tags_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
-    #   response = Mailflow::Tag.list
-    #   expected = tags
-    #   expect(response).to eq(expected)
-    # end
+    it 'returns a list of attributes if attributes found' do
+      stub_request(:get, "https://mailflow.com/api/attributes").to_return(:body => empty_attributes_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Attribute.list
+      expected = empty_attributes
+      expect(response).to eq(expected)
+    end
 
     # it 'returns an empty array if no tags found' do
     #   stub_request(:get, "https://mailflow.com/api/tags").to_return(:body => [].to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
