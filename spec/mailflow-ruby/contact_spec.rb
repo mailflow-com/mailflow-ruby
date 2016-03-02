@@ -7,7 +7,7 @@ describe Mailflow::Contact do
     Mailflow.setup('api_key', 'secret_key')
   end
 
-  let(:contact_response) { {"id" => "1ef1280b-d814-4e33-9f30-739c5b20188c","email" => "chris@mailflow.com","created_at" => "2015-11-18T15:58:13.845Z","confirmed" => true} }
+  let(:contact_response) { {"id" => "1ef1280b-d814-4e33-9f30-739c5b20188c","email" => "foo@example.com","created_at" => "2015-11-18T15:58:13.845Z","confirmed" => true} }
   let(:contacts_response) { [contact_response] }
   let(:contact) { Mailflow::Contact.new(contact_response) }
   let(:contacts) { [ contact ] }
@@ -32,7 +32,7 @@ describe Mailflow::Contact do
 
   context '.get' do
     it 'returns a contact matching email' do
-      email = 'chris@mailflow.com'
+      email = 'foo@example.com'
       stub_request(:get, "https://mailflow.com/api/contacts?email=#{email}").to_return(:body => contact_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
       response = Mailflow::Contact.get({email: email})
       expected = contact
@@ -48,7 +48,7 @@ describe Mailflow::Contact do
     end
 
     it 'returns nil if no contact found' do
-      email = 'chris@mailflow.com'
+      email = 'foo@example.com'
       stub_request(:get, "https://mailflow.com/api/contacts?email=#{email}").to_return(:status => 404, :headers => { "Content-Type" => "application/json" })
       response = Mailflow::Contact.get({email: email})
       expected = nil
@@ -59,7 +59,7 @@ describe Mailflow::Contact do
   context '.create' do
 
     it 'creates a contact by email address' do
-      body = { "email" => "chris@mailflow.com" }
+      body = { "email" => "foo@example.com" }
       stub_request(:post, "https://mailflow.com/api/contacts").
         with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
         to_return(:status => 200, :body => contact_response.to_json, :headers => { "Content-Type" => "application/json" })
@@ -123,9 +123,9 @@ describe Mailflow::Contact do
       attributes = [{key: 'first', value: 'chris'}, {key: 'second', value: 'foo'}]
       attributer = class_double('Mailflow::Attribute').as_stubbed_const(:transfer_nested_constants => true)
       expect(attributer).to receive(:update).with(attributes, {contact_id: contact.id})
-      contact.set_attributes({first: 'chris', second: 'foo'}) 
+      contact.set_attributes({first: 'chris', second: 'foo'})
     end
   end
- 
+
 
 end

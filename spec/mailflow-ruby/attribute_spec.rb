@@ -35,7 +35,7 @@ describe Mailflow::Attribute do
     end
 
     it 'lists all attributes for a contact by contact email address' do
-      email = 'chris@mailflow.com'
+      email = 'foo@example.com'
       stub_request(:get, "https://mailflow.com/api/attributes?email=#{email}").to_return(:body => attributes_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
       response = Mailflow::Attribute.list({email: email})
       expected = attributes
@@ -54,7 +54,7 @@ describe Mailflow::Attribute do
   context '.update' do
 
     it 'sends update attribute for a contact by email address' do  
-      email = 'chris@mailflow.com'
+      email = 'foo@example.com'
       _attributes = [{key: 'name', value: 'bar'}]
       body = {attributes: _attributes, email: email}
       stub_request(:post, "https://mailflow.com/api/attributes").
@@ -91,11 +91,11 @@ describe Mailflow::Attribute do
 
     it 'deletes an attribute from a contact by email address' do
       response = double('MagicClass')
-      body = {attributes: [{key: 'first_name'}], email: 'chris@mailflow.com'}
+      body = {attributes: [{key: 'first_name'}], email: 'foo@example.com'}
       attributer = class_double('HTTParty').as_stubbed_const(:transfer_nested_constants => true)
       expect(attributer).to receive(:delete).with("https://mailflow.com/api/attributes", {:body=>body.to_json, :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}}).and_return(response)
       expect(response).to receive(:code).twice.and_return(204)
-      response = Mailflow::Attribute.delete([{key: 'first_name'}], {email: 'chris@mailflow.com'})
+      response = Mailflow::Attribute.delete([{key: 'first_name'}], {email: 'foo@example.com'})
     end
 
     it 'deletes an attribute from a contact by contact id' do

@@ -29,7 +29,7 @@ describe Mailflow::Tag do
     end
 
     it 'lists all tags for a contact by contact email address' do
-      email = 'chris@mailflow.com'
+      email = 'foo@example.com'
       stub_request(:get, "https://mailflow.com/api/tags?email=#{email}").to_return(:body => tags_response.to_json, :status => 200, :headers => { "Content-Type" => "application/json" })
       response = Mailflow::Tag.list({email: email})
       expected = tags
@@ -61,7 +61,7 @@ describe Mailflow::Tag do
 
     it 'creates a tag with a contact by email address' do
       tags_array = ["Foo Bar"]
-      email_address = "chris@mailflow.com"
+      email_address = "foo@example.com"
       body = {tags: tags_response, email: email_address}
       stub_request(:post, "https://mailflow.com/api/tags").
         with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
@@ -85,7 +85,7 @@ describe Mailflow::Tag do
 
     it 'request includes trigger option if specified' do
       tags_array = ["Foo Bar"]
-      email_address = "chris@mailflow.com"
+      email_address = "foo@example.com"
       body = {tags: tags_response, email: email_address, trigger: true}
       stub_request(:post, "https://mailflow.com/api/tags").
         with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
@@ -100,11 +100,11 @@ describe Mailflow::Tag do
   context '.untag' do
     it 'removes a tag from contact by email address' do
       tags_array = ["Foo Bar"]
-      email_address = "chris@mailflow.com"
+      email_address = "foo@example.com"
       arguments = {tags: tags_array, email: email_address}
 
       tagger = class_double('HTTParty').as_stubbed_const(:transfer_nested_constants => true)
-      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[{\"name\":\"Foo Bar\"}],\"email\":\"chris@mailflow.com\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
+      expect(tagger).to receive(:delete).with("https://mailflow.com/api/tags", {:body=>"{\"tags\":[{\"name\":\"Foo Bar\"}],\"email\":\"foo@example.com\"}", :headers=>{"Content-Type"=>"application/json", "Accept"=>"application/json"}})
 
       Mailflow::Tag.untag(tags_array, {email: email_address})
     end
