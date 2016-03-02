@@ -51,10 +51,12 @@ module Mailflow
 
     def tag(tags)
       Mailflow::Tag.create(tags, {contact_id: id})
+      self
     end
 
     def untag(tags)
       Mailflow::Tag.untag(tags, {contact_id: id})
+      self
     end
 
     def attributes
@@ -67,6 +69,7 @@ module Mailflow
       end
 
       Mailflow::Attribute.update(attributes, {contact_id: id})
+      self
     end
 
   end

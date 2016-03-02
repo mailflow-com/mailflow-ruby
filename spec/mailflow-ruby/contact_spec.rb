@@ -135,5 +135,7 @@ describe Mailflow::Contact do
     end
   end
 
+  ## Test that all of these return the contact
+
 
 end
