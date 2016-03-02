@@ -4,7 +4,6 @@ describe Mailflow::Tag do
 
   before do
     WebMock.reset!
-    Mailflow.setup('api_key', 'secret_key')
   end
 
   let(:tag_response) { {"name" => "Foo Bar" } }

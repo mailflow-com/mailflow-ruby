@@ -4,7 +4,6 @@ describe Mailflow::Contact do
 
   before do
     WebMock.reset!
-    Mailflow.setup('api_key', 'secret_key')
   end
 
   let(:contact_response) { {"id" => "1ef1280b-d814-4e33-9f30-739c5b20188c","email" => "foo@example.com","created_at" => "2015-11-18T15:58:13.845Z","confirmed" => true} }

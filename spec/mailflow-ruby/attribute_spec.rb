@@ -4,7 +4,6 @@ describe Mailflow::Attribute do
 
   before do
     WebMock.reset!
-    Mailflow.setup('api_key', 'secret_key')
   end
 
   let(:empty_attribute_response) { {"key" => "first_name", "label" => "First name" } }
@@ -53,7 +52,7 @@ describe Mailflow::Attribute do
 
   context '.update' do
 
-    it 'sends update attribute for a contact by email address' do  
+    it 'sends update attribute for a contact by email address' do
       email = 'foo@example.com'
       _attributes = [{key: 'name', value: 'bar'}]
       body = {attributes: _attributes, email: email}
@@ -65,7 +64,7 @@ describe Mailflow::Attribute do
       expect(response).to eq(expected)
     end
 
-    it 'sends update attribute for a contact by contact id' do  
+    it 'sends update attribute for a contact by contact id' do
       contact_id = '1241'
       _attributes = [{key: 'name', value: 'bar'}]
       body = {attributes: _attributes, contact_id: contact_id}
