@@ -105,8 +105,14 @@ describe Mailflow::Contact do
   context '#tag' do
     it 'tags with an array of strings' do
       tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
-      expect(tagger).to receive(:create).with(["Foo Bar"], {contact_id: contact.id})
+      expect(tagger).to receive(:create).with(["Foo Bar"], {contact_id: contact.id}, false)
       contact.tag(["Foo Bar"])
+    end
+
+    it 'triggers if flag is provided' do
+      tagger = class_double('Mailflow::Tag').as_stubbed_const(:transfer_nested_constants => true)
+      expect(tagger).to receive(:create).with(["Foo Bar"], {contact_id: contact.id}, true)
+      contact.tag(["Foo Bar"], true)
     end
   end
 

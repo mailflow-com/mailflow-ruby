@@ -49,8 +49,8 @@ module Mailflow
       Mailflow::Tag.list(contact_id: id)
     end
 
-    def tag(tags)
-      Mailflow::Tag.create(tags, {contact_id: id})
+    def tag(tags, trigger = false)
+      Mailflow::Tag.create(tags, {contact_id: id}, trigger)
       self
     end
 
