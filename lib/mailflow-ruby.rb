@@ -12,6 +12,7 @@ module Mailflow
 
   def self.setup(api_key, api_secret)
     Mailflow.configure({api_key: api_key, api_secret: api_secret})
+    true
   end
 
 end

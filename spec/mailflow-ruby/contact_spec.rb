@@ -66,6 +66,15 @@ describe Mailflow::Contact do
       expect(response).to eq(contacts.first)
     end
 
+    it 'creates a confirmed contact if confirmed flag is true' do
+      body = { "email" => "foo@example.com", "confirmed" => true  }
+      stub_request(:post, "https://mailflow.com/api/contacts").
+        with(:body => body.to_json, :headers => { "Content-Type" => "application/json" }).
+        to_return(:status => 200, :body => contact_response.to_json, :headers => { "Content-Type" => "application/json" })
+      response = Mailflow::Contact.create(body)
+      expect(response).to eq(contacts.first)
+    end
+
     it 'returns 422 if email is invalid' do
       body = { "email" => "" }
       stub_request(:post, "https://mailflow.com/api/contacts").
