@@ -23,16 +23,23 @@ require 'mailflow-ruby'
 Mailflow.setup('API_KEY', 'SECRET_KEY')
 ```
 
-### List all contacts
+### Test authentication
 
 ```ruby
-Mailflow::Contact.list
+Mailflow::Client.test
 ```
+
+Returns 200 if authentication passes.
 
 ## Contacts
 
 #### Basic contact operations
 
+List all contacts
+
+```ruby
+Mailflow::Contact.list
+```
 
 Get a contact by email address or contact ID:
 
