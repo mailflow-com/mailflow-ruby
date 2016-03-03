@@ -65,7 +65,7 @@ module Mailflow
 
     def set_attributes(attributes)
       attributes = attributes.map do |key, value|
-        {key: key.to_s, value: value}
+        {key: key.to_s, label: key.to_s, value: value}
       end
 
       Mailflow::Attribute.update(attributes, {contact_id: id})
