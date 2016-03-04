@@ -1,8 +1,3 @@
-require 'base64'
-require 'json'
-require 'httparty'
-require 'byebug'
-
 module Mailflow
 
   class << self
