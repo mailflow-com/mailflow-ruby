@@ -6,7 +6,7 @@ module Mailflow
 
     include Mailflow::APIOperations
 
-    attr_accessor :name
+    attr_accessor :key, :label, :value
 
     class << self
       def list(options = {})
