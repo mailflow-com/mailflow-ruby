@@ -5,7 +5,7 @@ module Mailflow
     module ClassMethods
 
       def url(endpoint)
-        "https://mailflow.com/api/#{endpoint}"
+        "https://mailflowhq.com/api/#{endpoint}"
       end
 
       def get_request(endpoint, params = {})
