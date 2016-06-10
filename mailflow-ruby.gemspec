@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "mailflow-ruby"
   spec.version       = Mailflow::VERSION
   spec.authors       = ["Mailflow"]
-  spec.email         = ["support@mailflow.com"]
+  spec.email         = ["support@mailflowhq.com"]
 
   spec.summary       = "The official Ruby library for Mailflow's API"
-  spec.homepage      = "https://mailflow.com/support/api-reference"
+  spec.homepage      = "https://mailflowhq.com/support/api-reference"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
