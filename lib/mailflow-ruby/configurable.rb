@@ -2,7 +2,7 @@ require 'hashie'
 
 module Configurable
   def self.included(base)
-    base.const_set(:Configuration, Class.new(Hashie::Mash))
+    base.const_set(:Configuration, Class.new(Hashie::Mash)) unless base.const_defined?(:Configuration)
     base.extend(ClassMethods)
   end
 
